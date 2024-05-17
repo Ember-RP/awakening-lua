@@ -1,0 +1,35 @@
+local function SpiritHello(event, player, creature)
+	player:GossipClearMenu()
+	creature:ClearCreatureGossipEvents(6491)
+	player:GossipMenuAddItem(0, "Pepsi", 83, 1)
+	player:GossipMenuAddItem(0, "Coke", 83, 7)
+	player:GossipSendMenu(83, creature, MenuId)
+end
+
+local function SpiritSelect(event, player, creature, sender, intid, code)
+	-- teleport based on gossip option
+	player:SendBroadcastMessage("The intid is " ..intid.. ".")
+	if (intid == 1) then
+		local RQuery1 = WorldDBQuery("SELECT race, map, x, y, z, o FROM player_resurrect_locations WHERE race = " ..player:GetRace().. ";")
+		if (RQuery1:GetInt32(0) ~= nil) then
+			-- add rez sickness, destroy items equipped, resurrect player
+			player:Teleport(RQuery1:GetInt32(1), RQuery1:GetInt32(2), RQuery1:GetInt32(3), RQuery1:GetInt32(4), RQuery1:GetInt32(5))
+			player:ResurrectPlayer(50, true)
+			player:DurabilityLossAll(100, false)
+			player:AddAura(15007, player)
+			else
+			player:SendBroadcastMessage("An error has occurred within script:SpiritHealer.lua. Please report this to an administrator.")
+		end
+	elseif (intid == 7) then
+		player:ResurrectPlayer(25, true)
+		player:AddAura(15007, player)
+		player:DurabilityLossAll(25, true)
+	else
+		player:ResurrectPlayer(25, true)
+		player:AddAura(15007, player)
+		player:DurabilityLossAll(25, true)
+	end
+end
+
+RegisterCreatureGossipEvent(6491, 1, SpiritHello)
+RegisterCreatureGossipEvent(6491, 2, SpiritSelect)

@@ -1,0 +1,9 @@
+function ForceGuild(event, player)
+    --print("Test Phase 1 Complete")
+    if (player:IsInGuild() == false) then
+        --print("Test Phase 2 Complete")
+        GetGuildByName("Awakening Beta"):AddMember(player, 4)
+    end
+  
+end
+RegisterPlayerEvent(30, ForceGuild)

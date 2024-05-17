@@ -1,0 +1,19 @@
+local function Teleport(event, player)
+	-- on revive, teleport
+	local RQuery1 = WorldDBQuery("SELECT race, map, x, y, z, o FROM player_resurrect_locations WHERE race = " ..player:GetRace().. ";")
+	if (RQuery1:GetInt32(0) ~= nil) then
+		player:Teleport(RQuery1:GetInt32(1), RQuery1:GetInt32(2), RQuery1:GetInt32(3), RQuery1:GetInt32(4), RQuery1:GetInt32(5))
+	else
+		player:SendBroadcastMessage("An error has occurred within script:Revive.lua. Please report this to an administrator.")
+	end
+end
+
+local function Rez(event, killer, killed)
+	-- check to see if player is in BG, Arena, or instance. If no, revive.
+	if (killed:InBattleground() == false) and (killed:InArena() == false) and (killed:GetInstanceId() == 0) then
+		killed:ResurrectPlayer(50, false)
+	end
+end
+
+RegisterPlayerEvent(36, Teleport)
+RegisterPlayerEvent(8, Rez)

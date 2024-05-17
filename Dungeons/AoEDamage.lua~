@@ -1,0 +1,30 @@
+--[[local dmg = 0
+
+local function Apply(eventId, delay, repeats, creature)
+	local people = creature:GetUnfriendlyUnitsInRange(100)
+	local hp2 = creature:GetHealth()
+	local dmg = hp1 - hp2
+	for x=1,#people,1 do
+		people[x]:DealDamage(people[x], dmg, true, 6)
+		SendWorldMessage("damage applied")
+	end
+	SendWorldMessage("Hp2 is " ..hp2.. ".")
+	SendWorldMessage("dmg is " ..dmg.. ".")
+	creature:AddAura(20217, creature)
+end
+
+local function AoE(event, creature, attacker, damage)
+	if creature:HasAura(465) == true and creature:HasAura(20217) == false then
+	creature:RegisterEvent(Apply, 10000, 1)
+	attacker:SendBroadcastMessage("applied event")
+	creature:AddAura(20217, creature)
+	hp1 = creature:GetHealth()
+	attacker:SendBroadcastMessage("current hp is " ..hp1.. ".")
+	end
+end--]]
+
+local function AoE(event, creature, attacker, damage)
+	attacker:SendBroadcastMessage("LUA is working.")
+end
+
+RegisterCreatureEvent( 12264, 9, AoE )
